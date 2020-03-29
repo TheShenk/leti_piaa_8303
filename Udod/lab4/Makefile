@@ -1,2 +1,2 @@
 all:
-	g++ Source/main.cpp -o lab4
+	g++ Source/main.cpp -o lab4 -Wall

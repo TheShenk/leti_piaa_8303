@@ -1,7 +1,10 @@
 import os
 
 DIRECTORY = "Tests"
-PRGNAME = "./lab4"
+if os.name == "nt":
+    PRGNAME = "lab4"
+else:
+    PRGNAME = "./lab4"
 
 tests = os.listdir(DIRECTORY)
 

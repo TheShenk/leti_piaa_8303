@@ -5,7 +5,7 @@
 
 //#define DEBUG
 
-std::vector<int> prefix(std::string str){
+std::vector<int> prefix(std::string &str){
 
 #ifdef DEBUG
 
