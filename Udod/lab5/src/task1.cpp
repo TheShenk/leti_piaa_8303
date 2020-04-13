@@ -377,7 +377,7 @@ int main() {
                 std::cout << i - now->getDepth() + 2 << " " << needleIndex + 1 << std::endl;
 
 #endif
-                beginEndAns.emplace_back(i - now->getDepth() + needleIndex + 12, i);
+                beginEndAns.emplace_back(i - now->getDepth() + needleIndex + 2, i);
                 ans.emplace_back(i - now->getDepth() + 2, needleIndex + 1);
             }
 
@@ -455,6 +455,6 @@ int main() {
     }
 
     std::cout << "Текст с вырезанными подстроками: " << erasedText << std::endl;
-    
+
     return 0;
 }
