@@ -7,7 +7,7 @@
 
 #ifdef DEBUG
 
-    int globalIdCounter = 0;
+int globalIdCounter = 0;
 
 #endif
 
@@ -303,6 +303,9 @@ int main() {
     std::string text;
     std::string needle;
     // Найденные совпадения в формате <индекс начала, индекс конца>
+    std::vector<std::pair<int, int>> beginEndAns;
+
+    // Найденные совпадения в формате <индекс начала, индекс подстроки>
     std::vector<std::pair<int, int>> ans;
 
     auto *root = new BorNode();
@@ -352,6 +355,7 @@ int main() {
 #ifdef DEBUG
         std::cout << std::endl;
         std::cout << "Текущий символ: " << c << std::endl;
+        std::cout << "Его индекс: " << i << std::endl;
 
 #endif
 
@@ -370,9 +374,11 @@ int main() {
             for (auto needleIndex: now->getNeedles()) {
 #ifdef DEBUG
                 std::cout << "Обнаружено совпадение: ";
-#endif
                 std::cout << i - now->getDepth() + 2 << " " << needleIndex + 1 << std::endl;
-                ans.emplace_back(i - now->getDepth() + 2, i);
+
+#endif
+                beginEndAns.emplace_back(i - now->getDepth() + needleIndex + 12, i);
+                ans.emplace_back(i - now->getDepth() + 2, needleIndex + 1);
             }
 
 #ifdef DEBUG
@@ -396,13 +402,24 @@ int main() {
             for (auto needleIndex: terminalNext->getNeedles()) {
 #ifdef DEBUG
                 std::cout << "Обнаружено совпадение: ";
-#endif
                 std::cout << i - terminalNext->getDepth() + 2 << " " << needleIndex + 1 << std::endl;
-                ans.emplace_back(i - terminalNext->getDepth() + 2, i);
+#endif
+                beginEndAns.emplace_back(i - terminalNext->getDepth() + 2, i);
+                ans.emplace_back(i - terminalNext->getDepth() + 2, needleIndex + 1);
             }
             terminalNext = terminalNext->getTerminalPtr();
 
         }
+
+    }
+
+#ifdef DEBUG
+    std::cout << std::endl << "Полученный ответ: " << std::endl;
+#endif
+
+    for (auto a:ans){
+
+        std::cout << a.first << " " << a.second << std::endl;
 
     }
 
@@ -423,7 +440,7 @@ int main() {
     std::cout << "Максимальное число исходящие ребер: " << maxOut << std::endl;
 
     // Удаление вхождений. Так как могут быть пересечения, то отмечаем все символы, который должны быть удалены
-    for (auto founded: ans){
+    for (auto founded: beginEndAns){
         for (int i=founded.first-1; i<=founded.second; i++){
             text[i] = '#'; // Это символа нет в алфавите
         }
@@ -438,7 +455,6 @@ int main() {
     }
 
     std::cout << "Текст с вырезанными подстроками: " << erasedText << std::endl;
-
-
+    
     return 0;
 }

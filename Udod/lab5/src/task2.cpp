@@ -7,7 +7,7 @@
 
 #ifdef DEBUG
 
-    int globalIdCounter = 0;
+int globalIdCounter = 0;
 
 #endif
 
@@ -68,7 +68,7 @@ public:
     }
 
     // Добавление шаблона в бор
-    void addNeedle(std::string &needle, int needleCount){
+    void addNeedle(std::string needle, int needleCount){
 
 #ifdef DEBUG
         std::cout << std::endl;
@@ -306,6 +306,8 @@ int main() {
 
     auto *root = new BorNode();
 
+    std::vector<int> ans;
+
     std::cin >> text;
     std::cin >> needle;
     std::cin >> joker;
@@ -351,7 +353,7 @@ int main() {
 #ifdef DEBUG
         std::cout << std::endl;
         std::cout << "Текущий символ: " << c << std::endl;
-
+        std::cout << "Его индекс: " << i << std::endl;
 #endif
 
         now = now->deltaPtr(c);
@@ -367,15 +369,16 @@ int main() {
                 int possibleIndex = i - subTemplatesInfo[needleIndex].second - now->getDepth() + 1;
 
 #ifdef DEBUG
-                std::cout << "Обнаружен подшаблон в позиции " << possibleIndex << std::endl;
+                std::cout << "Обнаружен подшаблон " << subTemplatesInfo[needleIndex].first << " в позиции " << possibleIndex << std::endl;
+                std::cout << "На данный момент количество совпадений в этой позиции: " << possibleVars[possibleIndex] << std::endl;
 #endif
 
                 possibleVars[possibleIndex] += 1;
-                if (possibleVars[possibleIndex] == subTemplatesInfo.size()) {
+                if (possibleVars[possibleIndex] == subTemplatesInfo.size() && possibleIndex+needle.size() <= text.size() && possibleIndex >= 0) {
 #ifdef DEBUG
-                    std::cout << "Обнаружено совпадение шаблону в позиции: " << std::endl;
+                    std::cout << "Обнаружено совпадение шаблону в позиции: " << possibleIndex+1 << std::endl;
 #endif
-                    std::cout << possibleIndex+1 << std::endl;
+                    ans.push_back(possibleIndex+1);
                 }
             }
 
@@ -392,20 +395,30 @@ int main() {
             for (auto needleIndex: terminalNext->getNeedles()) {
                 int possibleIndex = i - subTemplatesInfo[needleIndex].second - terminalNext->getDepth() + 1;
 #ifdef DEBUG
-                std::cout << "Обнаружен подшаблон в позиции " << possibleIndex << std::endl;
+                std::cout << "Обнаружен подшаблон " << subTemplatesInfo[needleIndex].first << " в позиции " << possibleIndex << std::endl;
 #endif
                 possibleVars[possibleIndex] += 1;
-                if (possibleVars[possibleIndex] == subTemplatesInfo.size()) {
 #ifdef DEBUG
-                    std::cout << "Обнаружено совпадение шаблону в позиции: " << std::endl;
+                std::cout << "На данный момент количество совпадений в этой позиции: " << possibleVars[possibleIndex] << std::endl;
 #endif
-                    std::cout << possibleIndex+1 << std::endl;
+                if (possibleVars[possibleIndex] == subTemplatesInfo.size() && possibleIndex+needle.size() <= text.size() && possibleIndex >= 0) {
+#ifdef DEBUG
+                    std::cout << "Обнаружено совпадение шаблону в позиции: " << possibleIndex+1 << std::endl;
+#endif
+                    ans.push_back(possibleIndex+1);
                 }
             }
             terminalNext = terminalNext->getTerminalPtr();
 
         }
 
+    }
+
+#ifdef DEBUG
+    std::cout << std::endl << "Результат: " << std::endl;
+#endif
+    for (auto a: ans){
+        std::cout << a << std::endl;
     }
 
     return 0;
